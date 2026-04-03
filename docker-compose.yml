@@ -7,3 +7,5 @@ services:
       - "8323:3000"
     env_file:
       - .env
+    volumes:
+      - ./data:/app/data

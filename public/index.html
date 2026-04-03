@@ -10,7 +10,7 @@
   --bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;
   --text-muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--red:#f85149;
   --yellow:#d29922;--gray:#484f58;--badge-public:#238636;--badge-private:#8957e5;
-  --toast-bg:#1f6feb;
+  --toast-bg:#1f6feb;--danger:#da3633;
 }
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
 a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
@@ -19,9 +19,10 @@ a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 .header{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
 .header h1{font-size:1.4rem;font-weight:600;display:flex;align-items:center;gap:.5rem}
 .header h1 svg{width:28px;height:28px;fill:var(--text)}
-.header-right{display:flex;align-items:center;gap:1rem;font-size:.85rem;color:var(--text-muted)}
-.refresh-btn{background:var(--border);border:none;color:var(--text);padding:.35rem .75rem;border-radius:6px;cursor:pointer;font-size:.8rem;transition:background .15s}
-.refresh-btn:hover{background:var(--gray)}
+.header-right{display:flex;align-items:center;gap:.6rem;font-size:.85rem;color:var(--text-muted)}
+.header-btn{background:var(--border);border:none;color:var(--text);padding:.35rem .75rem;border-radius:6px;cursor:pointer;font-size:.8rem;transition:background .15s;display:flex;align-items:center;gap:.3rem}
+.header-btn:hover{background:var(--gray)}
+.header-btn svg{width:16px;height:16px;fill:currentColor}
 
 /* Search */
 .search-bar{max-width:900px;margin:1.25rem auto;padding:0 1.5rem}
@@ -34,6 +35,7 @@ a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 .section{margin-top:1.5rem}
 .section-title{font-size:1.1rem;font-weight:600;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
 .section-title .count{background:var(--border);border-radius:10px;padding:.1rem .55rem;font-size:.75rem;font-weight:500;color:var(--text-muted)}
+.section-title .type-badge{font-size:.7rem;padding:.1rem .45rem;border-radius:10px;font-weight:500;color:var(--text-muted);border:1px solid var(--border)}
 
 /* Cards grid */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:.75rem}
@@ -67,6 +69,42 @@ a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 /* Toast */
 .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--toast-bg);color:#fff;padding:.5rem 1.25rem;border-radius:8px;font-size:.85rem;opacity:0;transition:all .3s ease;pointer-events:none;z-index:999}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* Settings Drawer */
+.drawer-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;opacity:0;pointer-events:none;transition:opacity .25s}
+.drawer-backdrop.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:420px;max-width:90vw;background:var(--surface);border-left:1px solid var(--border);z-index:101;transform:translateX(100%);transition:transform .25s ease;overflow-y:auto;display:flex;flex-direction:column}
+.drawer.open{transform:translateX(0)}
+.drawer-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:1}
+.drawer-header h2{font-size:1.15rem;font-weight:600}
+.drawer-close{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.5rem;padding:.2rem .5rem;border-radius:4px;line-height:1}
+.drawer-close:hover{color:var(--text);background:var(--border)}
+.drawer-body{padding:1.25rem;flex:1;display:flex;flex-direction:column;gap:1.5rem}
+.drawer-section{display:flex;flex-direction:column;gap:.6rem}
+.drawer-section h3{font-size:.9rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
+.field{display:flex;flex-direction:column;gap:.3rem}
+.field label{font-size:.8rem;color:var(--text-muted)}
+.field input,.field select{padding:.45rem .7rem;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;outline:none}
+.field input:focus,.field select:focus{border-color:var(--accent)}
+.field-row{display:flex;gap:.5rem;align-items:flex-end}
+.field-row .field{flex:1}
+.btn{padding:.4rem .8rem;border-radius:6px;border:1px solid var(--border);background:var(--border);color:var(--text);cursor:pointer;font-size:.8rem;transition:all .15s;white-space:nowrap}
+.btn:hover{background:var(--gray)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-primary:hover{opacity:.85}
+.btn-danger{background:var(--danger);border-color:var(--danger);color:#fff}
+.btn-danger:hover{opacity:.85}
+.btn-sm{padding:.25rem .5rem;font-size:.75rem}
+.account-list{display:flex;flex-direction:column;gap:.4rem}
+.account-item{display:flex;align-items:center;justify-content:space-between;padding:.4rem .7rem;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-size:.85rem}
+.account-item .account-info{display:flex;align-items:center;gap:.5rem}
+.account-item .account-type{font-size:.7rem;padding:.1rem .4rem;border-radius:8px;background:var(--border);color:var(--text-muted)}
+.repo-list{max-height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:.25rem}
+.repo-item{display:flex;align-items:center;gap:.5rem;padding:.3rem .5rem;border-radius:4px;font-size:.82rem;cursor:pointer}
+.repo-item:hover{background:var(--bg)}
+.repo-item input[type="checkbox"]{accent-color:var(--accent)}
+.drawer-footer{padding:1rem 1.25rem;border-top:1px solid var(--border);position:sticky;bottom:0;background:var(--surface)}
+.hint{font-size:.75rem;color:var(--text-muted);font-style:italic}
 </style>
 </head>
 <body>
@@ -77,7 +115,14 @@ a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
   </h1>
   <div class="header-right">
     <span id="refresh-time"></span>
-    <button class="refresh-btn" onclick="fetchData()" title="手動重新整理">重新整理</button>
+    <button class="header-btn" onclick="fetchData()" title="手動重新整理">
+      <svg viewBox="0 0 16 16"><path d="M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z"/></svg>
+      重新整理
+    </button>
+    <button class="header-btn" onclick="openSettings()" title="設定">
+      <svg viewBox="0 0 16 16"><path d="M8 0a8.2 8.2 0 0 1 .701.031C9.444.095 9.99.645 10.16 1.29l.288 1.107c.018.066.079.158.212.224.231.114.454.243.668.386.123.082.233.09.3.071L12.72 2.8c.627-.2 1.315.007 1.73.564.15.202.29.412.42.629.127.21.248.429.358.653.306.623.13 1.354-.388 1.75l-.918.669a.345.345 0 0 0-.14.277c.006.267 0 .536-.018.802a.342.342 0 0 0 .14.283l.918.668c.519.396.694 1.127.388 1.75-.11.224-.231.443-.358.653-.13.217-.27.427-.42.63-.415.556-1.103.763-1.73.563l-1.091-.278a.34.34 0 0 0-.3.071 5.813 5.813 0 0 1-.668.386.345.345 0 0 0-.212.224l-.288 1.107c-.17.645-.716 1.195-1.459 1.26a8.094 8.094 0 0 1-1.402 0c-.743-.065-1.289-.615-1.459-1.26l-.289-1.107a.344.344 0 0 0-.211-.224 5.813 5.813 0 0 1-.668-.386.345.345 0 0 0-.3-.071l-1.092.278c-.627.2-1.315-.007-1.73-.564a7.29 7.29 0 0 1-.42-.628 7.04 7.04 0 0 1-.358-.654c-.306-.623-.13-1.354.388-1.75l.918-.668a.345.345 0 0 0 .14-.283 5.812 5.812 0 0 1 .018-.803.345.345 0 0 0-.14-.277l-.918-.669c-.519-.396-.694-1.127-.388-1.75.11-.224.231-.443.358-.653.13-.217.27-.427.42-.63.416-.556 1.103-.763 1.73-.563l1.091.278a.34.34 0 0 0 .3-.071c.214-.143.437-.272.668-.386a.344.344 0 0 0 .212-.224L5.84 1.29c.17-.645.716-1.195 1.459-1.26A8.094 8.094 0 0 1 8 0ZM5.5 8a2.5 2.5 0 1 0 5 0 2.5 2.5 0 0 0-5 0Z"/></svg>
+      設定
+    </button>
   </div>
 </div>
 
@@ -91,9 +136,80 @@ a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 
 <div class="toast" id="toast">已複製！</div>
 
+<!-- Settings Drawer -->
+<div class="drawer-backdrop" id="drawer-backdrop" onclick="closeSettings()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <h2>設定</h2>
+    <button class="drawer-close" onclick="closeSettings()">&times;</button>
+  </div>
+  <div class="drawer-body">
+    <!-- Token -->
+    <div class="drawer-section">
+      <h3>GitHub 權杖</h3>
+      <div class="field">
+        <label>目前權杖</label>
+        <span id="current-token" style="font-size:.85rem;color:var(--text-muted)">載入中…</span>
+      </div>
+      <div class="field">
+        <label>新權杖（留空不變更）</label>
+        <div class="field-row">
+          <div class="field" style="flex:1"><input type="password" id="new-token" placeholder="ghp_xxxxx…"></div>
+          <button class="btn btn-primary" onclick="saveToken()">更新</button>
+        </div>
+      </div>
+      <div class="field" id="env-token-hint" style="display:none">
+        <span class="hint">目前使用環境變數的 Token。設定新 Token 將覆蓋。</span>
+      </div>
+    </div>
+
+    <!-- Accounts -->
+    <div class="drawer-section">
+      <h3>帳號與組織</h3>
+      <div class="account-list" id="account-list"></div>
+      <div class="field-row" style="margin-top:.4rem">
+        <div class="field" style="flex:1"><input type="text" id="new-account-name" placeholder="帳號名稱"></div>
+        <div class="field" style="flex:0 0 auto">
+          <select id="new-account-type">
+            <option value="user">使用者</option>
+            <option value="org">組織</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="addAccount()">新增</button>
+      </div>
+    </div>
+
+    <!-- Intervals -->
+    <div class="drawer-section">
+      <h3>更新間隔</h3>
+      <div class="field">
+        <label>伺服器快取（秒）</label>
+        <input type="number" id="cache-ttl" min="10" step="10">
+      </div>
+      <div class="field">
+        <label>前端自動刷新（秒）</label>
+        <input type="number" id="refresh-interval" min="10" step="10">
+      </div>
+      <button class="btn btn-primary" onclick="saveIntervals()" style="align-self:flex-start;margin-top:.3rem">儲存間隔</button>
+    </div>
+
+    <!-- Hidden Repos -->
+    <div class="drawer-section">
+      <h3>隱藏儲存庫</h3>
+      <p class="hint" style="margin-bottom:.3rem">取消勾選將隱藏該儲存庫</p>
+      <div class="repo-list" id="repo-list">
+        <span class="hint">請先載入儀表板資料…</span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-const REFRESH_INTERVAL = 5 * 60 * 1000;
+let REFRESH_INTERVAL = 5 * 60 * 1000;
+let refreshTimer = null;
 let allData = null;
+let settingsData = null;
+let allReposForSettings = []; // all repos including hidden, for the settings panel
 
 function relativeTime(dateStr) {
   const now = Date.now();
@@ -153,10 +269,11 @@ function renderCard(repo) {
 </div>`;
 }
 
-function renderSection(title, repos) {
+function renderSection(name, type, repos) {
   if (!repos.length) return "";
+  const typeLabel = type === "org" ? "組織" : "個人";
   return `<div class="section">
-  <div class="section-title">${escapeHtml(title)} <span class="count">${repos.length}</span></div>
+  <div class="section-title">${escapeHtml(name)} <span class="type-badge">${typeLabel}</span> <span class="count">${repos.length}</span></div>
   <div class="grid">${repos.map(renderCard).join("")}</div>
 </div>`;
 }
@@ -167,8 +284,10 @@ function render(data) {
     app.innerHTML = '<div class="loading"><div class="spinner"></div>載入中…</div>';
     return;
   }
-  let html = renderSection("個人儲存庫 — chuangkevin", data.personal);
-  html += renderSection("組織儲存庫 — kevinsisi", data.org);
+  let html = "";
+  for (const group of data.groups) {
+    html += renderSection(group.name, group.type, group.repos);
+  }
   if (!html) html = '<div class="loading">找不到任何儲存庫</div>';
   app.innerHTML = html;
   applyFilter();
@@ -180,7 +299,6 @@ function applyFilter() {
     const name = card.getAttribute("data-name");
     card.style.display = (!q || name.includes(q)) ? "" : "none";
   });
-  // Update visible counts
   document.querySelectorAll(".section").forEach(sec => {
     const visible = sec.querySelectorAll(".card:not([style*='display: none'])").length;
     const countEl = sec.querySelector(".count");
@@ -193,6 +311,13 @@ async function fetchData() {
     const res = await fetch("/api/repos");
     if (!res.ok) throw new Error("API 錯誤");
     allData = await res.json();
+    // Collect all repos for settings panel
+    allReposForSettings = [];
+    for (const g of allData.groups) {
+      for (const r of g.repos) {
+        allReposForSettings.push(r);
+      }
+    }
     render(allData);
     document.getElementById("refresh-time").textContent =
       "上次更新：" + new Date(allData.fetchedAt).toLocaleTimeString("zh-Hant");
@@ -204,16 +329,210 @@ async function fetchData() {
 
 function copyUrl(url) {
   navigator.clipboard.writeText(url).then(() => {
-    const toast = document.getElementById("toast");
-    toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 1500);
+    showToast("已複製！");
   });
 }
 
+function showToast(msg) {
+  const toast = document.getElementById("toast");
+  toast.textContent = msg;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 1500);
+}
+
+function startRefreshTimer() {
+  if (refreshTimer) clearInterval(refreshTimer);
+  refreshTimer = setInterval(fetchData, REFRESH_INTERVAL);
+}
+
+// --- Settings ---
+function openSettings() {
+  document.getElementById("drawer-backdrop").classList.add("open");
+  document.getElementById("drawer").classList.add("open");
+  loadSettingsUI();
+}
+
+function closeSettings() {
+  document.getElementById("drawer-backdrop").classList.remove("open");
+  document.getElementById("drawer").classList.remove("open");
+}
+
+async function loadSettingsUI() {
+  try {
+    const res = await fetch("/api/settings");
+    settingsData = await res.json();
+
+    // Token
+    document.getElementById("current-token").textContent = settingsData.githubToken || "未設定";
+    document.getElementById("new-token").value = "";
+    const hint = document.getElementById("env-token-hint");
+    hint.style.display = settingsData.hasEnvToken ? "" : "none";
+
+    // Accounts
+    renderAccountList();
+
+    // Intervals
+    document.getElementById("cache-ttl").value = Math.round(settingsData.cacheTtlMs / 1000);
+    document.getElementById("refresh-interval").value = Math.round(settingsData.refreshIntervalMs / 1000);
+
+    // Repos
+    renderRepoList();
+  } catch (err) {
+    console.error("Failed to load settings:", err);
+  }
+}
+
+function renderAccountList() {
+  const list = document.getElementById("account-list");
+  if (!settingsData || !settingsData.accounts.length) {
+    list.innerHTML = '<span class="hint">尚無帳號</span>';
+    return;
+  }
+  list.innerHTML = settingsData.accounts.map((a, i) => `
+    <div class="account-item">
+      <div class="account-info">
+        <span>${escapeHtml(a.name)}</span>
+        <span class="account-type">${a.type === "org" ? "組織" : "使用者"}</span>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="removeAccount(${i})">移除</button>
+    </div>
+  `).join("");
+}
+
+async function addAccount() {
+  const nameEl = document.getElementById("new-account-name");
+  const typeEl = document.getElementById("new-account-type");
+  const name = nameEl.value.trim();
+  if (!name) return;
+  const accounts = [...settingsData.accounts, { name, type: typeEl.value }];
+  try {
+    const res = await fetch("/api/settings", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ accounts }),
+    });
+    if (!res.ok) { const e = await res.json(); showToast(e.error || "錯誤"); return; }
+    nameEl.value = "";
+    settingsData.accounts = accounts;
+    renderAccountList();
+    showToast("已新增帳號");
+    fetchData();
+  } catch { showToast("新增失敗"); }
+}
+
+async function removeAccount(index) {
+  const accounts = settingsData.accounts.filter((_, i) => i !== index);
+  try {
+    const res = await fetch("/api/settings", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ accounts }),
+    });
+    if (!res.ok) { const e = await res.json(); showToast(e.error || "錯誤"); return; }
+    settingsData.accounts = accounts;
+    renderAccountList();
+    showToast("已移除帳號");
+    fetchData();
+  } catch { showToast("移除失敗"); }
+}
+
+async function saveToken() {
+  const val = document.getElementById("new-token").value.trim();
+  if (!val) { showToast("請輸入 Token"); return; }
+  try {
+    const res = await fetch("/api/settings", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ githubToken: val }),
+    });
+    if (!res.ok) { const e = await res.json(); showToast(e.error || "Token 無效"); return; }
+    showToast("Token 已更新");
+    document.getElementById("new-token").value = "";
+    loadSettingsUI();
+    fetchData();
+  } catch { showToast("更新失敗"); }
+}
+
+async function saveIntervals() {
+  const cacheSec = parseInt(document.getElementById("cache-ttl").value);
+  const refreshSec = parseInt(document.getElementById("refresh-interval").value);
+  if (isNaN(cacheSec) || cacheSec < 10) { showToast("快取至少 10 秒"); return; }
+  if (isNaN(refreshSec) || refreshSec < 10) { showToast("刷新至少 10 秒"); return; }
+  try {
+    const res = await fetch("/api/settings", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ cacheTtlMs: cacheSec * 1000, refreshIntervalMs: refreshSec * 1000 }),
+    });
+    if (!res.ok) { const e = await res.json(); showToast(e.error || "錯誤"); return; }
+    REFRESH_INTERVAL = refreshSec * 1000;
+    startRefreshTimer();
+    showToast("間隔已更新");
+  } catch { showToast("儲存失敗"); }
+}
+
+function renderRepoList() {
+  const list = document.getElementById("repo-list");
+  const hidden = new Set(settingsData ? settingsData.hiddenRepos : []);
+
+  // Combine visible repos + hidden repos
+  const allKnown = [...allReposForSettings];
+  // Add hidden repos that aren't in current data (they were filtered server-side)
+  for (const fullName of hidden) {
+    if (!allKnown.find(r => r.full_name === fullName)) {
+      allKnown.push({ full_name: fullName, name: fullName.split("/")[1] || fullName });
+    }
+  }
+
+  if (!allKnown.length) {
+    list.innerHTML = '<span class="hint">尚無儲存庫資料</span>';
+    return;
+  }
+
+  allKnown.sort((a, b) => a.full_name.localeCompare(b.full_name));
+  list.innerHTML = allKnown.map(r => {
+    const isVisible = !hidden.has(r.full_name);
+    return `<label class="repo-item">
+      <input type="checkbox" ${isVisible ? "checked" : ""} onchange="toggleRepo('${escapeHtml(r.full_name)}', this.checked)">
+      <span>${escapeHtml(r.full_name)}</span>
+    </label>`;
+  }).join("");
+}
+
+async function toggleRepo(fullName, visible) {
+  const hidden = new Set(settingsData.hiddenRepos);
+  if (visible) {
+    hidden.delete(fullName);
+  } else {
+    hidden.add(fullName);
+  }
+  const hiddenRepos = Array.from(hidden);
+  try {
+    const res = await fetch("/api/settings", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ hiddenRepos }),
+    });
+    if (!res.ok) { const e = await res.json(); showToast(e.error || "錯誤"); return; }
+    settingsData.hiddenRepos = hiddenRepos;
+    showToast(visible ? "已顯示" : "已隱藏");
+    fetchData();
+  } catch { showToast("更新失敗"); }
+}
+
+// --- Init ---
 document.getElementById("search").addEventListener("input", applyFilter);
 
-fetchData();
-setInterval(fetchData, REFRESH_INTERVAL);
+(async function init() {
+  // Load settings to get refresh interval
+  try {
+    const res = await fetch("/api/settings");
+    const s = await res.json();
+    REFRESH_INTERVAL = s.refreshIntervalMs || REFRESH_INTERVAL;
+  } catch {}
+  await fetchData();
+  startRefreshTimer();
+})();
 </script>
 </body>
 </html>
