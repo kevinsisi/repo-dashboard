@@ -38,14 +38,16 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H ${{ secrets.DEPLOY_SERVER_IP }} >> ~/.ssh/known_hosts
 
-      - name: Sync docker-compose.yml to server
+      - name: Sync docker-compose.yml and .env to server
         env:
           DEPLOY_SERVER_IP: ${{ secrets.DEPLOY_SERVER_IP }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          APP_GITHUB_TOKEN: ${{ secrets.APP_GITHUB_TOKEN }}
         run: |
           ssh -i ~/.ssh/deploy_key "${DEPLOY_USER}@${DEPLOY_SERVER_IP}" "mkdir -p '${DEPLOY_PATH}'"
           scp -i ~/.ssh/deploy_key docker-compose.prod.yml "${DEPLOY_USER}@${DEPLOY_SERVER_IP}:${DEPLOY_PATH}/docker-compose.yml"
+          ssh -i ~/.ssh/deploy_key "${DEPLOY_USER}@${DEPLOY_SERVER_IP}" "echo 'GITHUB_TOKEN=${APP_GITHUB_TOKEN}' > '${DEPLOY_PATH}/.env'"
 
       - name: Deploy via SSH
         env:
