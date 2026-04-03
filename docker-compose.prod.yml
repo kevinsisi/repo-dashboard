@@ -1,0 +1,9 @@
+services:
+  repo-dashboard:
+    image: ${DOCKERHUB_USERNAME}/repo-dashboard:latest
+    container_name: repo-dashboard
+    restart: unless-stopped
+    ports:
+      - "8323:3000"
+    env_file:
+      - .env

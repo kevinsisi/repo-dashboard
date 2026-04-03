@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub Dashboard</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;
+  --text-muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--red:#f85149;
+  --yellow:#d29922;--gray:#484f58;--badge-public:#238636;--badge-private:#8957e5;
+  --toast-bg:#1f6feb;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+
+/* Header */
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.header h1{font-size:1.4rem;font-weight:600;display:flex;align-items:center;gap:.5rem}
+.header h1 svg{width:28px;height:28px;fill:var(--text)}
+.header-right{display:flex;align-items:center;gap:1rem;font-size:.85rem;color:var(--text-muted)}
+.refresh-btn{background:var(--border);border:none;color:var(--text);padding:.35rem .75rem;border-radius:6px;cursor:pointer;font-size:.8rem;transition:background .15s}
+.refresh-btn:hover{background:var(--gray)}
+
+/* Search */
+.search-bar{max-width:900px;margin:1.25rem auto;padding:0 1.5rem}
+.search-bar input{width:100%;padding:.6rem 1rem;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.95rem;outline:none;transition:border-color .15s}
+.search-bar input:focus{border-color:var(--accent)}
+.search-bar input::placeholder{color:var(--text-muted)}
+
+/* Main */
+.container{max-width:900px;margin:0 auto;padding:0 1.5rem 3rem}
+.section{margin-top:1.5rem}
+.section-title{font-size:1.1rem;font-weight:600;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+.section-title .count{background:var(--border);border-radius:10px;padding:.1rem .55rem;font-size:.75rem;font-weight:500;color:var(--text-muted)}
+
+/* Cards grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:.75rem}
+@media(max-width:500px){.grid{grid-template-columns:1fr}}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem 1.15rem;display:flex;flex-direction:column;gap:.55rem;transition:border-color .15s}
+.card:hover{border-color:var(--gray)}
+.card-top{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.card-name{font-weight:600;font-size:.95rem;word-break:break-all}
+.badge{font-size:.7rem;padding:.1rem .45rem;border-radius:10px;font-weight:500;color:#fff;flex-shrink:0}
+.badge-public{background:var(--badge-public)}
+.badge-private{background:var(--badge-private)}
+.card-desc{font-size:.82rem;color:var(--text-muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:auto;gap:.5rem;flex-wrap:wrap}
+.card-meta{display:flex;align-items:center;gap:.75rem;font-size:.78rem;color:var(--text-muted)}
+.status-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0}
+.status-success{background:var(--green)}
+.status-failure{background:var(--red)}
+.status-pending{background:var(--yellow)}
+.status-none{background:var(--gray)}
+.copy-btn{background:none;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);cursor:pointer;padding:.3rem .5rem;display:flex;align-items:center;gap:.3rem;font-size:.75rem;transition:all .15s;flex-shrink:0}
+.copy-btn:hover{border-color:var(--accent);color:var(--accent)}
+.copy-btn svg{width:14px;height:14px;fill:currentColor}
+
+/* States */
+.loading,.error-state{text-align:center;padding:4rem 1rem;color:var(--text-muted);font-size:1rem}
+.error-state{color:var(--red)}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Toast */
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--toast-bg);color:#fff;padding:.5rem 1.25rem;border-radius:8px;font-size:.85rem;opacity:0;transition:all .3s ease;pointer-events:none;z-index:999}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>
+    <svg viewBox="0 0 16 16"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
+    GitHub Dashboard
+  </h1>
+  <div class="header-right">
+    <span id="refresh-time"></span>
+    <button class="refresh-btn" onclick="fetchData()" title="手動重新整理">重新整理</button>
+  </div>
+</div>
+
+<div class="search-bar">
+  <input type="text" id="search" placeholder="搜尋儲存庫名稱…" autocomplete="off">
+</div>
+
+<div class="container" id="app">
+  <div class="loading"><div class="spinner"></div>載入中…</div>
+</div>
+
+<div class="toast" id="toast">已複製！</div>
+
+<script>
+const REFRESH_INTERVAL = 5 * 60 * 1000;
+let allData = null;
+
+function relativeTime(dateStr) {
+  const now = Date.now();
+  const then = new Date(dateStr).getTime();
+  const diff = Math.max(0, now - then);
+  const sec = Math.floor(diff / 1000);
+  if (sec < 60) return "剛剛";
+  const min = Math.floor(sec / 60);
+  if (min < 60) return min + " 分鐘前";
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return hr + " 小時前";
+  const day = Math.floor(hr / 24);
+  if (day < 30) return day + " 天前";
+  const mon = Math.floor(day / 30);
+  if (mon < 12) return mon + " 個月前";
+  return Math.floor(mon / 12) + " 年前";
+}
+
+function actionsStatus(actions) {
+  if (!actions) return { cls: "status-none", label: "無 Actions" };
+  if (actions.status !== "completed") return { cls: "status-pending", label: "執行中" };
+  if (actions.conclusion === "success") return { cls: "status-success", label: "成功" };
+  return { cls: "status-failure", label: "失敗" };
+}
+
+function escapeHtml(str) {
+  const d = document.createElement("div");
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function renderCard(repo) {
+  const st = actionsStatus(repo.actions);
+  const vis = repo.visibility === "private"
+    ? '<span class="badge badge-private">私有</span>'
+    : '<span class="badge badge-public">公開</span>';
+  const actionsLink = repo.actions && repo.actions.html_url
+    ? `<a href="${repo.actions.html_url}" target="_blank" title="${st.label}"><span class="status-dot ${st.cls}"></span></a>`
+    : `<span class="status-dot ${st.cls}" title="${st.label}"></span>`;
+  return `<div class="card" data-name="${escapeHtml(repo.name.toLowerCase())}">
+  <div class="card-top">
+    <a class="card-name" href="${repo.html_url}" target="_blank">${escapeHtml(repo.name)}</a>
+    ${vis}
+  </div>
+  <div class="card-desc">${repo.description ? escapeHtml(repo.description) : "無描述"}</div>
+  <div class="card-bottom">
+    <div class="card-meta">
+      ${actionsLink}
+      <span>${st.label}</span>
+      <span>更新於 ${relativeTime(repo.updated_at)}</span>
+    </div>
+    <button class="copy-btn" onclick="copyUrl('${repo.clone_url}')">
+      <svg viewBox="0 0 16 16"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25ZM5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+      複製
+    </button>
+  </div>
+</div>`;
+}
+
+function renderSection(title, repos) {
+  if (!repos.length) return "";
+  return `<div class="section">
+  <div class="section-title">${escapeHtml(title)} <span class="count">${repos.length}</span></div>
+  <div class="grid">${repos.map(renderCard).join("")}</div>
+</div>`;
+}
+
+function render(data) {
+  const app = document.getElementById("app");
+  if (!data) {
+    app.innerHTML = '<div class="loading"><div class="spinner"></div>載入中…</div>';
+    return;
+  }
+  let html = renderSection("個人儲存庫 — chuangkevin", data.personal);
+  html += renderSection("組織儲存庫 — kevinsisi", data.org);
+  if (!html) html = '<div class="loading">找不到任何儲存庫</div>';
+  app.innerHTML = html;
+  applyFilter();
+}
+
+function applyFilter() {
+  const q = document.getElementById("search").value.trim().toLowerCase();
+  document.querySelectorAll(".card").forEach(card => {
+    const name = card.getAttribute("data-name");
+    card.style.display = (!q || name.includes(q)) ? "" : "none";
+  });
+  // Update visible counts
+  document.querySelectorAll(".section").forEach(sec => {
+    const visible = sec.querySelectorAll(".card:not([style*='display: none'])").length;
+    const countEl = sec.querySelector(".count");
+    if (countEl) countEl.textContent = visible;
+  });
+}
+
+async function fetchData() {
+  try {
+    const res = await fetch("/api/repos");
+    if (!res.ok) throw new Error("API 錯誤");
+    allData = await res.json();
+    render(allData);
+    document.getElementById("refresh-time").textContent =
+      "上次更新：" + new Date(allData.fetchedAt).toLocaleTimeString("zh-Hant");
+  } catch (err) {
+    document.getElementById("app").innerHTML =
+      '<div class="error-state">載入失敗：' + escapeHtml(err.message) + "</div>";
+  }
+}
+
+function copyUrl(url) {
+  navigator.clipboard.writeText(url).then(() => {
+    const toast = document.getElementById("toast");
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 1500);
+  });
+}
+
+document.getElementById("search").addEventListener("input", applyFilter);
+
+fetchData();
+setInterval(fetchData, REFRESH_INTERVAL);
+</script>
+</body>
+</html>

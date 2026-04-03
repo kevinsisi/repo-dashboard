@@ -1,0 +1,9 @@
+services:
+  repo-dashboard:
+    build: .
+    container_name: repo-dashboard
+    restart: unless-stopped
+    ports:
+      - "8323:3000"
+    env_file:
+      - .env
