@@ -7,5 +7,7 @@ services:
       - "8323:3000"
     env_file:
       - .env
+    environment:
+      - TZ=Asia/Taipei
     volumes:
       - ./data:/app/data
